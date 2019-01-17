@@ -18,7 +18,7 @@ app = Flask(__name__)
 # Database Setup
 #################################################
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:007326@localhost:3306/School_DB"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:007326@localhost:3306/School_DB2"
 db = SQLAlchemy(app)
 
 # reflect an existing database into a new model
@@ -37,10 +37,10 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/names")
+@app.route("/data")
 def names():
     """Return a list of sample names."""
-    df = pd.read_sql('Select * from location', engine)
+    df = pd.read_sql('Select * from data', engine)
     # Use Pandas to perform the sql query
     # stmt = db.session.query(Samples).statement
     # df = pd.read_sql_query(stmt, db.session.bind)
@@ -48,12 +48,21 @@ def names():
     # Return a list of the column names (sample names)
     return df.to_json(orient='records')
 
+@app.route("/data/bubble")
+def bubble():
+    """Return a list of sample names."""
+    df = pd.read_sql('Select * from data', engine)
+    # Use Pandas to perform the sql query
+    # stmt = db.session.query(Samples).statement
+    # df = pd.read_sql_query(stmt, db.session.bind)
 
-@app.route("/metadata/<state>")
-def sample_metadata(state):
-    """Return the MetaData for a given sample."""
-    df = pd.read_sql(f'select * from location where state="{state}"', engine)
+    # Return a list of the column names (sample names)
     return df.to_json(orient='records')
+# @app.route("/metadata/<state>")
+# def sample_metadata(state):
+#     """Return the MetaData for a given sample."""
+#     df = pd.read_sql(f'select * from location where state="{state}"', engine)
+#     return df.to_json(orient='records')
 
 #     results = db.session.query(*sel).filter(Samples_Metadata.sample == sample).all()
 
@@ -91,4 +100,4 @@ def sample_metadata(state):
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
